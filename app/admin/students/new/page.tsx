@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StudentForm } from "./student-form";
 
+// Force dynamic rendering - this page requires database access and authentication
+export const dynamic = 'force-dynamic';
+
 export default async function NewStudentPage() {
   // Fetch batches for dropdown
   const batches = await prisma.batch.findMany({

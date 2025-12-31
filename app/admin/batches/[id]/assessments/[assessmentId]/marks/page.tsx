@@ -9,6 +9,9 @@ type Props = {
   params: Promise<{ id: string; assessmentId: string }>;
 };
 
+// Force dynamic rendering - this page requires database access and authentication
+export const dynamic = 'force-dynamic';
+
 export default async function MarksEntryPage({ params }: Props) {
   const { id: batchId, assessmentId } = await params;
 

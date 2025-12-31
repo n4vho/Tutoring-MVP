@@ -11,6 +11,9 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
+// Force dynamic rendering - this page requires database access and authentication
+export const dynamic = 'force-dynamic';
+
 export default async function StudentDetailPage({ params }: Props) {
   const { id } = await params;
 

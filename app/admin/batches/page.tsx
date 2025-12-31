@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SuccessMessage } from "./success-message";
 
+// Force dynamic rendering - this page requires database access and authentication
+export const dynamic = 'force-dynamic';
+
 export default async function AdminBatchesPage() {
   const batches = await prisma.batch.findMany({
     orderBy: { name: "asc" },

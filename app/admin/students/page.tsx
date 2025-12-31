@@ -15,6 +15,9 @@ type Props = {
   }>;
 };
 
+// Force dynamic rendering - this page requires database access and authentication
+export const dynamic = 'force-dynamic';
+
 export default async function AdminStudentsPage({ searchParams }: Props) {
   const params = await searchParams;
   const searchQuery = params.q || "";
