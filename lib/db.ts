@@ -14,16 +14,33 @@ function getPrismaClient(): PrismaClient {
 
   if (!prismaInstance) {
     // Parse connection string to handle SSL properly
-    const connectionString = process.env.DATABASE_URL;
+    let connectionString = process.env.DATABASE_URL;
     
-    // Configure Pool with SSL settings for Supabase
-    const pool = new Pool({
+    // For Supabase connections, ensure SSL is configured properly
+    // Remove any existing sslmode from connection string to avoid conflicts
+    if (connectionString.includes('supabase')) {
+      // Remove existing sslmode parameters
+      connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, '');
+      
+      // Add sslmode=no-verify to connection string for Supabase
+      // This handles certificate chain issues in serverless environments
+      const separator = connectionString.includes('?') ? '&' : '?';
+      connectionString = `${connectionString}${separator}sslmode=no-verify`;
+    }
+    
+    // Configure Pool with SSL settings
+    const poolConfig: any = {
       connectionString,
-      ssl: connectionString.includes('supabase') ? {
-        rejectUnauthorized: false // Supabase uses valid certificates, but we need to allow them
-      } : undefined,
-    });
+    };
     
+    // For Supabase, also set SSL in Pool config as backup
+    if (connectionString.includes('supabase')) {
+      poolConfig.ssl = {
+        rejectUnauthorized: false, // Allow certificate chain issues
+      };
+    }
+    
+    const pool = new Pool(poolConfig);
     const adapter = new PrismaPg(pool);
     prismaInstance = new PrismaClient({ adapter });
   }
