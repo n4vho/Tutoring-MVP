@@ -16,6 +16,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if DATABASE_URL is set
+    if (!process.env.DATABASE_URL) {
+      console.error("DATABASE_URL is not set");
+      return NextResponse.json(
+        { error: "Database configuration error. Please contact administrator." },
+        { status: 500 }
+      );
+    }
+
     // Find user by phone and check if they're an admin
     const user = await prisma.user.findUnique({
       where: { phone },
@@ -49,10 +58,34 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error);
+    // Log more details in development
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error details:", {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name,
+      });
+    }
+    
+    // Provide more specific error messages
+    if (error?.message?.includes("DATABASE_URL")) {
+      return NextResponse.json(
+        { error: "Database configuration error. Please contact administrator." },
+        { status: 500 }
+      );
+    }
+    
+    if (error?.message?.includes("connect") || error?.message?.includes("connection")) {
+      return NextResponse.json(
+        { error: "Unable to connect to database. Please try again later." },
+        { status: 500 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: "An error occurred" },
+      { error: "An error occurred. Please try again." },
       { status: 500 }
     );
   }

@@ -13,7 +13,17 @@ function getPrismaClient(): PrismaClient {
   }
 
   if (!prismaInstance) {
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    // Parse connection string to handle SSL properly
+    const connectionString = process.env.DATABASE_URL;
+    
+    // Configure Pool with SSL settings for Supabase
+    const pool = new Pool({
+      connectionString,
+      ssl: connectionString.includes('supabase') ? {
+        rejectUnauthorized: false // Supabase uses valid certificates, but we need to allow them
+      } : undefined,
+    });
+    
     const adapter = new PrismaPg(pool);
     prismaInstance = new PrismaClient({ adapter });
   }
