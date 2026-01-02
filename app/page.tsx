@@ -197,8 +197,8 @@ export default function Home() {
                   <div className="mb-4 text-3xl">✉️</div>
                   <h3 className="mb-2 font-semibold">Email</h3>
                   <p className="text-sm text-muted-foreground">
-                    <a href="mailto:info@tutoringcenter.com" className="hover:text-foreground">
-                      info@tutoringcenter.com
+                    <a href="mailto:kabir0718@gmail.com" className="hover:text-foreground">
+                      kabir0718@gmail.com
                     </a>
                   </p>
                 </CardContent>
@@ -208,8 +208,7 @@ export default function Home() {
                   <div className="mb-4 text-3xl">📍</div>
                   <h3 className="mb-2 font-semibold">Location</h3>
                   <p className="text-sm text-muted-foreground">
-                    123 Education Street<br />
-                    Learning City, LC 12345
+                    10 Zilla School Road, Mymensingh
                   </p>
                 </CardContent>
               </Card>
