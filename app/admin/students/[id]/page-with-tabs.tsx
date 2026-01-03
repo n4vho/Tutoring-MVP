@@ -43,7 +43,9 @@ type Payment = {
   category: "ADMISSION" | "MONTHLY" | "MODEL_TEST" | "OTHER";
   appliesToMonth: string; // ISO date string
   paidAt: string; // ISO date string
+  createdAt: string; // ISO date string
   note: string | null;
+  receiptNo: string | null;
   createdByUser: {
     id: string;
     username: string | null;
