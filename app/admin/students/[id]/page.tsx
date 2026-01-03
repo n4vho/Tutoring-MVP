@@ -46,6 +46,37 @@ export default async function StudentDetailPage({ params }: Props) {
     notFound();
   }
 
+  // Fetch payments for this student
+  const paymentsData = await prisma.payment.findMany({
+    where: { studentId: id },
+    orderBy: [
+      { appliesToMonth: "desc" },
+      { paidAt: "desc" },
+    ],
+    include: {
+      createdByUser: {
+        select: {
+          id: true,
+          username: true,
+          phone: true,
+        },
+      },
+    },
+  });
+
+  // Transform payments for the component
+  const payments = paymentsData.map((payment) => ({
+    id: payment.id,
+    amount: payment.amount,
+    category: payment.category as "ADMISSION" | "MONTHLY" | "MODEL_TEST" | "OTHER",
+    appliesToMonth: payment.appliesToMonth.toISOString(),
+    paidAt: payment.paidAt.toISOString(),
+    createdAt: payment.createdAt.toISOString(),
+    note: payment.note,
+    receiptNo: payment.receiptNo,
+    createdByUser: payment.createdByUser,
+  }));
+
   // Transform scores for the component
   const scores = student.assessmentScores.map((score) => ({
     id: score.id,
@@ -98,6 +129,8 @@ export default async function StudentDetailPage({ params }: Props) {
               batch: student.batch,
             }}
             scores={scores}
+            payments={payments}
+            monthlyFee={student.batch?.monthlyFee ?? null}
           />
         </div>
       </div>

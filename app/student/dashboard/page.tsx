@@ -82,6 +82,9 @@ export default async function StudentDashboardPage() {
           <Link href="/student/profile">
             <Button variant="outline">My Profile</Button>
           </Link>
+          <Link href="/student/payments">
+            <Button variant="outline">Payment History</Button>
+          </Link>
           <Link href="/student/results">
             <Button variant="outline">View Results</Button>
           </Link>

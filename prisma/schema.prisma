@@ -30,6 +30,13 @@ enum EnrollmentRequestStatus {
   REJECTED
 }
 
+enum PaymentCategory {
+  ADMISSION
+  MONTHLY
+  MODEL_TEST
+  OTHER
+}
+
 model User {
   id        String   @id @default(cuid())
   role      Role     @default(ADMIN)
@@ -39,6 +46,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  payments  Payment[]
+
   @@index([phone])
   @@index([username])
 }
@@ -47,6 +56,7 @@ model Batch {
   id          String   @id @default(cuid())
   name        String   @unique
   description String?
+  monthlyFee  Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -70,6 +80,7 @@ model Student {
   batch           Batch?            @relation(fields: [batchId], references: [id], onDelete: SetNull)
   assessmentScores AssessmentScore[]
   enrollmentRequest EnrollmentRequest?
+  payments        Payment[]
 
   @@index([registrationNo])
   @@index([status])
@@ -129,4 +140,31 @@ model EnrollmentRequest {
   @@index([createdAt])
   @@index([convertedStudentId])
   @@index([referenceId])
+}
+
+model ReceiptCounter {
+  monthKey     String   @id // Format: "YYYY-MM" (e.g., "2026-01")
+  lastNumber   Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+model Payment {
+  id              String         @id @default(cuid())
+  studentId       String
+  amount          Int
+  category        PaymentCategory
+  appliesToMonth  DateTime
+  paidAt          DateTime       @default(now())
+  createdAt       DateTime       @default(now())
+  createdByUserId String
+  note            String?
+  receiptNo       String?        @unique
+  receiptIssuedAt DateTime?     @default(now())
+
+  student         Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
+
+  @@index([studentId, appliesToMonth])
+  @@index([studentId, category])
+  @@index([receiptNo])
 }

@@ -127,3 +127,63 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Print Styles for Receipt */
+@media print {
+  /* Hide navigation and UI controls */
+  nav,
+  .no-print,
+  button:not(.print-keep),
+  header,
+  footer:not(.receipt-footer) {
+    display: none !important;
+  }
+
+  /* Set A4 page size and margins */
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  /* Ensure body and html take full page */
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Remove background colors and shadows */
+  * {
+    background: white !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Keep borders for structure */
+  .border,
+  .border-t,
+  .border-b {
+    border-color: #000 !important;
+  }
+
+  /* Ensure text is black */
+  * {
+    color: #000 !important;
+  }
+
+  /* Receipt-specific styles */
+  .receipt-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Prevent page breaks inside receipt sections */
+  .receipt-section {
+    page-break-inside: avoid;
+  }
+}
