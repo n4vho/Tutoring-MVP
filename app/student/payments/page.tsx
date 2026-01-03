@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { StudentPaymentsList } from "./payments-list";
 
+// Force dynamic rendering - this page requires database access and authentication
+export const dynamic = "force-dynamic";
+
 export default async function StudentPaymentsPage() {
   // Require student session - redirects if not authenticated
   let studentId: string;
